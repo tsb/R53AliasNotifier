@@ -6,8 +6,8 @@ var sns = new aws.SNS();
 var http = require ('http');
 
 exports.handler = (event, context, callback) => {
-    var ROUTE53_HOSTED_ZONE = 'Z2JIPR0VO8J5GE';
-    var topicARN = 'arn:aws:sns:eu-west-1:824215216374:mymail';
+    var ROUTE53_HOSTED_ZONE = event.hostedid;
+    var topicARN = event.topicarn;
     
     getR53HostedZone(ROUTE53_HOSTED_ZONE, topicARN);
     
@@ -21,7 +21,7 @@ exports.handler = (event, context, callback) => {
               } else {
                 //console.log(data);
                 data.ResourceRecordSets.forEach(function(record){
-                    if(record.AliasTarget !== null){
+                    if(record.AliasTarget != null){
                         console.log(record);
                         let body = '';
                         const req = http.get("http://" + record.Name.replace(/.$/, "") + "/", (res) => {
